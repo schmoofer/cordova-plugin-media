@@ -151,6 +151,14 @@ public class AudioHandler extends CordovaPlugin {
            } catch (NumberFormatException nfe) {
                //no-op
            }
+
+        } else if (action.equals("setPan")) {
+           try {
+               this.setPan(args.getString(0), Float.parseFloat(args.getString(1)));
+           } catch (NumberFormatException nfe) {
+               //no-op
+           }
+           
         } else if (action.equals("getCurrentPositionAudio")) {
             float f = this.getCurrentPositionAudio(args.getString(0));
             callbackContext.sendPluginResult(new PluginResult(status, f));
@@ -482,6 +490,23 @@ public class AudioHandler extends CordovaPlugin {
         AudioPlayer audio = this.players.get(id);
         if (audio != null) {
             audio.setVolume(volume);
+        } else {
+          LOG.e(TAG3,"Unknown Audio Player " + id);
+        }
+    }
+
+    /**
+     * Set the pan for an audio device
+     *
+     * @param id                The id of the audio player
+     * @param volume            Volume to adjust to 0.0f - 1.0f
+     */
+    public void setPan(String id, float pan) {
+        String TAG3 = "AudioHandler.setPan(): Error : ";
+
+        AudioPlayer audio = this.players.get(id);
+        if (audio != null) {
+            audio.setPan(pan);
         } else {
           LOG.e(TAG3,"Unknown Audio Player " + id);
         }

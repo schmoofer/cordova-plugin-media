@@ -282,8 +282,35 @@
             [[self soundCache] setObject:audioFile forKey:mediaId];
         }
     }
+}
 
-    // don't care for any callbacks
+- (void)setPan:(CDVInvokedUrlCommand*)command
+{
+    NSString* callbackId = command.callbackId;
+
+#pragma unused(callbackId)
+    NSString* mediaId = [command argumentAtIndex:0];
+    NSNumber* pan = [command argumentAtIndex:1 withDefault:[NSNumber numberWithFloat:1.0]];
+
+    if ([self soundCache] != nil) {
+        CDVAudioFile* audioFile = [[self soundCache] objectForKey:mediaId];
+        if (audioFile != nil) {
+            audioFile.pan = pan;
+            if (audioFile.player) {
+                audioFile.player.pan = [pan floatValue];
+            }
+            else {
+                float customPan = [pan floatValue];
+                if (customPan >= 0.0 && customPan <= 1.0) {
+                    [avPlayer setPan: customPan];
+                }
+                else {
+                    NSLog(@"The value must be within the range of 0.0 to 1.0");
+                }
+            }
+            [[self soundCache] setObject:audioFile forKey:mediaId];
+        }
+    }
 }
 
 - (void)setRate:(CDVInvokedUrlCommand*)command

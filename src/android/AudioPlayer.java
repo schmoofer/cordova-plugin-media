@@ -541,6 +541,24 @@ public class AudioPlayer implements OnCompletionListener, OnPreparedListener, On
         }
     }
 
+    public void setPan(float pan) 
+    {
+      if (this.player != null) {
+        float p = Math.max(-1, pan);
+        p = Math.min(1, p);
+
+        float x = (p + 1) / 2;
+
+        float gainL = (float) Math.cos(x * Math.PI / 2);
+        float gainR = (float) Math.sin(x * Math.PI / 2);
+
+        this.player.setVolume(gainL, gainR);
+      } else {
+        LOG.d(LOG_TAG, "AudioPlayer Error: Cannot set volume until the audio file is initialized.");
+        sendErrorStatus(MEDIA_ERR_NONE_ACTIVE);
+      }
+    }
+
     /**
      * attempts to put the player in play mode
      * @return true if in playmode, false otherwise
