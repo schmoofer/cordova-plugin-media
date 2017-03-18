@@ -295,18 +295,8 @@
     if ([self soundCache] != nil) {
         CDVAudioFile* audioFile = [[self soundCache] objectForKey:mediaId];
         if (audioFile != nil) {
-            audioFile.pan = pan;
             if (audioFile.player) {
                 audioFile.player.pan = [pan floatValue];
-            }
-            else {
-                float customPan = [pan floatValue];
-                if (customPan >= 0.0 && customPan <= 1.0) {
-                    [avPlayer setPan: customPan];
-                }
-                else {
-                    NSLog(@"The value must be within the range of 0.0 to 1.0");
-                }
             }
             [[self soundCache] setObject:audioFile forKey:mediaId];
         }
